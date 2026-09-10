@@ -9,3 +9,16 @@ __pycache__/
 .idea/
 *.db
 backend/uploads/
+# Environment variables
+.env
+
+# Python
+venv/
+__pycache__/
+*.pyc
+
+# Database
+*.db
+
+# User uploads
+backend/uploads/
