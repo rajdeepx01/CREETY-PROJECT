@@ -1,0 +1,51 @@
+from backend.app.schemas.auth import (
+    RegisterRequest,
+    LoginRequest,
+    OAuthLoginRequest,
+    TokenResponse,
+    RefreshTokenRequest,
+    Setup2FAResponse,
+    Verify2FARequest,
+    Disable2FARequest,
+    VerifyEmailRequest,
+    ResendVerificationRequest,
+    PasswordChangeRequest,
+)
+from backend.app.schemas.user import (
+    UserSummary,
+    UserProfileResponse,
+    UserProfileUpdateRequest,
+    PublicUserProfileResponse,
+)
+from backend.app.schemas.achievement import (
+    AchievementBase,
+    AchievementCreate,
+    AchievementUpdate,
+    AchievementResponse,
+    AchievementListResponse,
+    AchievementVisibilityToggle,
+)
+
+__all__ = [
+    "RegisterRequest",
+    "LoginRequest",
+    "OAuthLoginRequest",
+    "TokenResponse",
+    "RefreshTokenRequest",
+    "Setup2FAResponse",
+    "Verify2FARequest",
+    "Disable2FARequest",
+    "VerifyEmailRequest",
+    "ResendVerificationRequest",
+    "PasswordChangeRequest",
+    "UserSummary",
+    "UserProfileResponse",
+    "UserProfileUpdateRequest",
+    "PublicUserProfileResponse",
+    "AchievementBase",
+    "AchievementCreate",
+    "AchievementUpdate",
+    "AchievementResponse",
+    "AchievementListResponse",
+    "AchievementVisibilityToggle",
+]

@@ -1,0 +1,607 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Credence — Secure Achievement & Credential Showcase</title>
+  <meta name="description" content="Upload, verify, manage, and showcase your professional certificates, awards, badges, and project completions with enterprise security and shareable public portfolios.">
+  
+  <!-- Google Fonts: Plus Jakarta Sans -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- CSS Stylesheets -->
+  <link rel="stylesheet" href="/css/styles.css">
+  <link rel="stylesheet" href="/css/components.css">
+</head>
+<body>
+  <div class="app-container">
+    
+    <!-- Top Navigation Bar -->
+    <header class="navbar">
+      <div class="navbar-inner">
+        <a href="/" class="brand" id="navBrandLogo">
+          <div class="brand-icon">💎</div>
+          <span>Credence</span>
+          <span class="brand-badge">Vault</span>
+        </a>
+
+        <div class="nav-actions">
+          <!-- Sandbox Mailbox Dev Tool -->
+          <button class="btn btn-sm btn-secondary" id="mailboxBadgeBtn" title="Inspect Outgoing Verification Emails">
+            📬 Dev Mailbox
+          </button>
+
+          <!-- Guest State Actions -->
+          <div id="guestNavActions" class="nav-actions" style="display: flex;">
+            <button class="btn btn-secondary btn-sm" id="navLoginBtn">Sign In</button>
+            <button class="btn btn-primary btn-sm" id="navRegisterBtn">Get Started</button>
+          </div>
+
+          <!-- Authenticated User Menu -->
+          <div id="authNavActions" class="nav-actions" style="display: none;">
+            <button class="btn btn-primary btn-sm" id="addAchievementBtn">
+              <span>+</span> Add Achievement
+            </button>
+            
+            <div class="user-menu-wrapper">
+              <button class="user-menu-btn" id="userMenuBtn">
+                <div class="user-avatar" id="navUserAvatar">U</div>
+                <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+              </button>
+
+              <div class="dropdown-menu" id="userDropdownMenu">
+                <button class="dropdown-item" id="sharePortfolioNavBtn" onclick="window.profile.openShareModal();">
+                  <span>🔗</span> Share Public Portfolio
+                </button>
+                <button class="dropdown-item" id="editProfileNavBtn" onclick="window.profile.openEditProfileModal();">
+                  <span>⚙️</span> Profile Settings
+                </button>
+                <button class="dropdown-item" id="open2FASetupBtn">
+                  <span>🛡️</span> 2FA Security Center
+                </button>
+                <div class="dropdown-divider"></div>
+                <button class="dropdown-item" id="logoutDropdownBtn" style="color: var(--accent-rose);">
+                  <span>🚪</span> Log Out
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Content Body -->
+    <main class="main-content">
+
+      <!-- Guest Welcome Hero Banner -->
+      <section id="guestWelcomeBanner" class="profile-hero" style="text-align: center; padding: 4rem 2rem;">
+        <div style="max-width: 720px; margin: 0 auto;">
+          <span class="badge badge-verified" style="margin-bottom: 1.25rem; font-size: 0.85rem; padding: 0.35rem 0.85rem;">
+            ✨ Verified Proof of Accomplishment
+          </span>
+          <h1 style="font-size: 2.8rem; font-weight: 800; line-height: 1.2; margin-bottom: 1.25rem; letter-spacing: -0.03em;">
+            Showcase Your Best Work with <span style="background: var(--primary-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Verified Credibility</span>
+          </h1>
+          <p style="font-size: 1.15rem; color: var(--text-secondary); margin-bottom: 2rem; line-height: 1.6;">
+            Create your permanent digital trophy room. Upload certificates, awards, licenses, and badges with cryptographic integrity, granular privacy controls, and instant shareable portfolio links.
+          </p>
+          <div style="display: flex; justify-content: center; gap: 1rem; flex-wrap: wrap;">
+            <button class="btn btn-primary" id="heroGetStartedBtn" style="padding: 0.85rem 1.75rem; font-size: 1rem;">
+              🚀 Create Your Free Showcase
+            </button>
+            <button class="btn btn-secondary" onclick="document.querySelector('[data-tab=\'login\']').click(); window.app.openModal('authModal');" style="padding: 0.85rem 1.5rem; font-size: 1rem;">
+              🔑 Existing User Sign In
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- Authenticated User Showcase Section -->
+      <section id="showcaseSection" style="display: none;">
+        
+        <!-- Profile Header Banner -->
+        <div class="profile-hero">
+          <div class="profile-hero-content">
+            <div class="profile-user-info">
+              <div class="profile-avatar-large" id="profileAvatarWrapper">
+                <img id="profileAvatarImg" src="" alt="Profile Avatar" style="display: none;" />
+              </div>
+              <div class="profile-details">
+                <h1 id="profileName">Loading Profile...</h1>
+                <p class="profile-headline" id="profileHeadline"></p>
+                <p id="profileBio" style="color: var(--text-secondary); font-size: 0.9rem; margin-bottom: 0.75rem; max-width: 650px;"></p>
+                <div class="profile-meta-row">
+                  <span id="profileUsername"></span>
+                  <span>•</span>
+                  <span id="profileJoinedDate"></span>
+                  <span>•</span>
+                  <span id="profilePrivacyStatusBadge" class="badge badge-public">🌐 Public Profile</span>
+                </div>
+                <div class="profile-social-links" id="profileSocialLinks"></div>
+              </div>
+            </div>
+
+            <div class="profile-actions">
+              <button class="btn btn-secondary" id="sharePortfolioBtn">
+                <span>🔗</span> Share Portfolio
+              </button>
+              <button class="btn btn-secondary" id="editProfileBtn">
+                <span>✏️</span> Edit Profile
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Stats Grid -->
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-icon total">🎖️</div>
+            <div>
+              <div class="stat-val" id="statTotal">0</div>
+              <div class="stat-label">Total Achievements</div>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon public">🌐</div>
+            <div>
+              <div class="stat-val" id="statPublic">0</div>
+              <div class="stat-label">Public Showcase</div>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon categories">🏷️</div>
+            <div>
+              <div class="stat-val" id="statCategories">0</div>
+              <div class="stat-label">Categories</div>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon featured">⭐</div>
+            <div>
+              <div class="stat-val" id="statFeatured">0</div>
+              <div class="stat-label">Featured Highlights</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Controls: Filters, Search, View Mode -->
+        <div class="showcase-controls">
+          <div class="controls-top-row">
+            <div class="search-input-wrapper">
+              <span class="search-icon">🔍</span>
+              <input type="text" class="search-input" id="achievementSearchInput" placeholder="Search by title, organization, skill, or keyword..." />
+            </div>
+
+            <div class="controls-view-filters">
+              <select class="form-select" id="visibilityFilterSelect" style="width: auto; padding: 0.55rem 0.85rem;">
+                <option value="all">All Visibility</option>
+                <option value="public">🌐 Public Only</option>
+                <option value="private">🔒 Private Only</option>
+              </select>
+
+              <select class="form-select" id="sortBySelect" style="width: auto; padding: 0.55rem 0.85rem;">
+                <option value="date_desc">Newest First</option>
+                <option value="date_asc">Oldest First</option>
+                <option value="title_asc">Title (A-Z)</option>
+                <option value="recent">Recently Added</option>
+              </select>
+
+              <div class="view-mode-toggle">
+                <button class="view-btn active" id="viewGridBtn">
+                  <span>▦</span> Grid
+                </button>
+                <button class="view-btn" id="viewTimelineBtn">
+                  <span>☷</span> Timeline
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Category Pills -->
+          <div class="category-pills-row" id="categoryPillsContainer"></div>
+        </div>
+
+        <!-- Gallery Grid View Container -->
+        <div class="achievements-grid" id="achievementsGrid"></div>
+
+        <!-- Timeline View Container -->
+        <div id="achievementsTimeline" style="display: none;"></div>
+
+        <!-- Empty State -->
+        <div class="empty-state" id="achievementsEmptyState" style="display: none;">
+          <div class="empty-icon">🏆</div>
+          <h2>No Achievements Found</h2>
+          <p style="color: var(--text-secondary); max-width: 450px;">
+            Start building your credential portfolio by uploading your certificates, licenses, hackathon wins, and awards.
+          </p>
+          <button class="btn btn-primary" onclick="window.achievements.openAddModal()">
+            + Add Your First Achievement
+          </button>
+        </div>
+
+      </section>
+    </main>
+
+    <!-- ==================== MODALS ==================== -->
+
+    <!-- Auth Modal (Sign In / Register) -->
+    <div class="modal-overlay" id="authModal">
+      <div class="modal-box" style="max-width: 440px;">
+        <div class="modal-header">
+          <h2>Welcome to Credence</h2>
+          <button class="modal-close-btn">&times;</button>
+        </div>
+
+        <!-- Tab Switcher -->
+        <div style="display: flex; gap: 0.5rem; background: rgba(0,0,0,0.25); padding: 4px; border-radius: var(--radius-md); margin-bottom: 1.5rem;">
+          <button class="btn btn-sm auth-tab-btn active" data-tab="login" style="flex: 1;">Sign In</button>
+          <button class="btn btn-sm auth-tab-btn" data-tab="register" style="flex: 1;">Create Account</button>
+        </div>
+
+        <!-- 1-Click OAuth Demo -->
+        <button class="btn btn-secondary" id="googleOAuthBtn" style="width: 100%; margin-bottom: 1.25rem;">
+          <svg width="18" height="18" viewBox="0 0 24 24"><path fill="#EA4335" d="M12 5c1.6 0 3 .6 4.1 1.6l3.1-3.1C17.3 1.7 14.8 1 12 1 7.5 1 3.7 3.6 1.9 7.3l3.7 2.9C6.5 7.3 9 5 12 5z"/><path fill="#4285F4" d="M23.5 12.3c0-.8-.1-1.6-.2-2.3H12v4.5h6.5c-.3 1.5-1.1 2.8-2.4 3.7l3.7 2.9c2.2-2 3.7-5 3.7-8.8z"/><path fill="#FBBC05" d="M5.6 14.8c-.2-.7-.4-1.5-.4-2.3s.2-1.6.4-2.3L1.9 7.3C.7 9.7 0 12 0 14.5s.7 4.8 1.9 7.2l3.7-2.9z"/><path fill="#34A853" d="M12 23.5c3.2 0 6-1.1 8-3l-3.7-2.9c-1.1.7-2.5 1.2-4.3 1.2-3 0-5.5-2.3-6.4-5.2L1.9 16.5C3.7 20.2 7.5 23.5 12 23.5z"/></svg>
+          Continue with Google
+        </button>
+
+        <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1.25rem;">
+          <div style="flex: 1; height: 1px; background: var(--border-subtle);"></div>
+          <span style="font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase;">or email</span>
+          <div style="flex: 1; height: 1px; background: var(--border-subtle);"></div>
+        </div>
+
+        <!-- Login Form -->
+        <div id="loginFormContainer">
+          <form id="loginForm">
+            <div class="form-group">
+              <label class="form-label" for="loginIdentifier">Email or Username</label>
+              <input type="text" class="form-input" id="loginIdentifier" required placeholder="user@example.com" />
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="loginPassword">Password</label>
+              <input type="password" class="form-input" id="loginPassword" required placeholder="••••••••" />
+            </div>
+            <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 0.5rem;">Sign In</button>
+          </form>
+        </div>
+
+        <!-- Register Form -->
+        <div id="registerFormContainer" style="display: none;">
+          <form id="registerForm">
+            <div class="form-group">
+              <label class="form-label" for="regFullName">Full Name</label>
+              <input type="text" class="form-input" id="regFullName" required placeholder="Elena Rostova" />
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="regUsername">Username</label>
+              <input type="text" class="form-input" id="regUsername" required placeholder="elena_r" pattern="[a-zA-Z0-9_-]+" />
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="regEmail">Email Address</label>
+              <input type="email" class="form-input" id="regEmail" required placeholder="elena@example.com" />
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="regPassword">Password (min 8 chars)</label>
+              <input type="password" class="form-input" id="regPassword" required minlength="8" placeholder="••••••••" />
+            </div>
+            <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 0.5rem;">Create Account</button>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- 2FA Challenge Modal -->
+    <div class="modal-overlay" id="twofaChallengeModal">
+      <div class="modal-box" style="max-width: 420px; text-align: center;">
+        <div class="modal-header">
+          <h2>Two-Factor Authentication</h2>
+          <button class="modal-close-btn">&times;</button>
+        </div>
+        <p style="color: var(--text-secondary); font-size: 0.9rem; margin-bottom: 1.5rem;">
+          Enter the 6-digit code from your authenticator app (Google Authenticator, Authy, etc.) or use a backup recovery code.
+        </p>
+        <form id="twofaChallengeForm">
+          <div class="form-group">
+            <input type="text" class="form-input" id="twofaCodeInput" placeholder="000000" maxlength="6" style="text-align: center; font-size: 1.5rem; letter-spacing: 0.3em; font-family: monospace;" />
+          </div>
+          <div style="font-size: 0.8rem; color: var(--text-muted); margin: 0.75rem 0;">— OR USE BACKUP CODE —</div>
+          <div class="form-group">
+            <input type="text" class="form-input" id="twofaBackupCodeInput" placeholder="XXXX-XXXX" style="text-align: center; font-family: monospace;" />
+          </div>
+          <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 1rem;">Verify & Enter</button>
+        </form>
+      </div>
+    </div>
+
+    <!-- 2FA Security Center Setup Modal -->
+    <div class="modal-overlay" id="twofaSetupModal">
+      <div class="modal-box" style="max-width: 500px;">
+        <div class="modal-header">
+          <h2>🛡️ Setup Two-Factor Authentication</h2>
+          <button class="modal-close-btn">&times;</button>
+        </div>
+
+        <div class="twofa-box-grid">
+          <div class="qr-container">
+            <img id="twofaQrImage" src="" alt="2FA QR Code" />
+          </div>
+
+          <div style="text-align: center; font-size: 0.85rem; color: var(--text-secondary);">
+            Scan this QR code with Google Authenticator, 1Password, or Microsoft Authenticator.<br>
+            Secret Key: <code id="twofaSecretCode" style="color: #a5b4fc; background: rgba(0,0,0,0.3); padding: 2px 6px; border-radius: 4px;"></code>
+          </div>
+
+          <div style="width: 100%;">
+            <div style="font-size: 0.85rem; font-weight: 700; margin-bottom: 0.4rem; color: var(--accent-amber);">
+              ⚠️ Save Emergency Recovery Codes:
+            </div>
+            <div class="backup-codes-grid" id="twofaBackupCodesList"></div>
+          </div>
+
+          <form id="enable2FAForm" style="width: 100%;">
+            <div class="form-group">
+              <label class="form-label" for="enable2FACodeInput">Enter 6-digit Code from Authenticator to Activate:</label>
+              <input type="text" class="form-input" id="enable2FACodeInput" required maxlength="6" placeholder="123456" style="text-align: center; font-size: 1.25rem; letter-spacing: 0.2em; font-family: monospace;" />
+            </div>
+            <button type="submit" class="btn btn-primary" style="width: 100%;">Activate 2FA Protection</button>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- Add / Edit Achievement Modal -->
+    <div class="modal-overlay" id="achievementModal">
+      <div class="modal-box">
+        <div class="modal-header">
+          <h2 id="achievementModalTitle">Add New Achievement</h2>
+          <button class="modal-close-btn">&times;</button>
+        </div>
+
+        <form id="achievementForm">
+          <div class="form-group">
+            <label class="form-label" for="achTitle">Achievement Title *</label>
+            <input type="text" class="form-input" id="achTitle" required placeholder="e.g. AWS Certified Solutions Architect, HackMIT 1st Place" />
+          </div>
+
+          <div class="form-grid-2">
+            <div class="form-group">
+              <label class="form-label" for="achCategory">Category *</label>
+              <select class="form-select" id="achCategory" required>
+                <option value="Certificate">📜 Certificate</option>
+                <option value="Award">🏆 Award</option>
+                <option value="Badge">🎖️ Badge</option>
+                <option value="Project Completion">🚀 Project Completion</option>
+                <option value="License">⚖️ License</option>
+                <option value="Hackathon">⚡ Hackathon</option>
+                <option value="Publication">📚 Publication</option>
+                <option value="Degree">🎓 Degree</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="achIssuer">Issuing Organization *</label>
+              <input type="text" class="form-input" id="achIssuer" required placeholder="e.g. Amazon Web Services, Google, Stanford" />
+            </div>
+          </div>
+
+          <div class="form-grid-2">
+            <div class="form-group">
+              <label class="form-label" for="achIssueDate">Date Earned *</label>
+              <input type="date" class="form-input" id="achIssueDate" required />
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="achExpDate">Expiration Date (Optional)</label>
+              <input type="date" class="form-input" id="achExpDate" />
+            </div>
+          </div>
+
+          <div class="form-grid-2">
+            <div class="form-group">
+              <label class="form-label" for="achCredId">Credential ID (Optional)</label>
+              <input type="text" class="form-input" id="achCredId" placeholder="e.g. CERT-98234-A" />
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="achCredUrl">Verification URL (Optional)</label>
+              <input type="url" class="form-input" id="achCredUrl" placeholder="https://verify.issuer.org/cert/..." />
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="achDescription">Description & Impact</label>
+            <textarea class="form-textarea" id="achDescription" rows="3" placeholder="Describe the competencies demonstrated, project scope, or award criteria..."></textarea>
+          </div>
+
+          <div class="form-grid-2">
+            <div class="form-group">
+              <label class="form-label" for="achTags">Skills / Tags (comma separated)</label>
+              <input type="text" class="form-input" id="achTags" placeholder="Cloud, Python, Distributed Systems" />
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="achScore">Score / Grade / Placement</label>
+              <input type="text" class="form-input" id="achScore" placeholder="e.g. 98%, Top 1%, Summa Cum Laude" />
+            </div>
+          </div>
+
+          <!-- File Upload Dropzone -->
+          <div class="form-group">
+            <label class="form-label">Upload Certificate Media (PDF, PNG, JPG, WEBP - Max 10MB)</label>
+            <div class="file-dropzone" id="fileDropzone">
+              <input type="file" class="file-input-hidden" id="achievementFileInput" accept=".pdf,.png,.jpg,.jpeg,.webp" />
+              <div class="dropzone-content" id="dropzoneDefaultContent">
+                <div class="dropzone-icon">📄</div>
+                <div style="font-weight: 600; font-size: 0.95rem;">Drag & drop certificate file here or click to browse</div>
+                <div style="font-size: 0.8rem; color: var(--text-muted);">Secure content validation and virus verification performed</div>
+              </div>
+              <div class="file-preview-pill" id="filePreviewPill" style="display: none;">
+                <span id="selectedFileName">file.pdf</span>
+                <button type="button" class="btn btn-sm btn-danger" id="removeSelectedFileBtn">Remove</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Privacy Toggle -->
+          <div class="form-group" style="background: rgba(0,0,0,0.25); padding: 1rem; border-radius: var(--radius-md); border: 1px solid var(--border-subtle);">
+            <label class="form-label" style="margin-bottom: 0.6rem;">Privacy & Visibility</label>
+            <div style="display: flex; gap: 2rem;">
+              <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer;">
+                <input type="radio" name="achVisibility" id="achPublicRadio" value="true" checked />
+                <span>🌐 <strong>Public</strong> (Visible on your public portfolio)</span>
+              </label>
+              <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer;">
+                <input type="radio" name="achVisibility" id="achPrivateRadio" value="false" />
+                <span>🔒 <strong>Private</strong> (Only visible to you)</span>
+              </label>
+            </div>
+          </div>
+
+          <div style="display: flex; justify-content: flex-end; gap: 0.75rem; margin-top: 1.5rem;">
+            <button type="button" class="btn btn-secondary" onclick="window.app.closeModal('achievementModal')">Cancel</button>
+            <button type="submit" class="btn btn-primary">Save Achievement</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- Fullscreen Certificate & Document Viewer Modal -->
+    <div class="modal-overlay" id="documentViewerModal">
+      <div class="modal-box" style="max-width: 900px;">
+        <div class="modal-header">
+          <div>
+            <h2 id="docViewerTitle" style="font-size: 1.25rem;">Certificate Viewer</h2>
+            <div id="docViewerIssuer" style="font-size: 0.85rem; color: var(--text-secondary);"></div>
+          </div>
+          <div style="display: flex; align-items: center; gap: 0.75rem;">
+            <a id="docViewerDownloadBtn" href="#" class="btn btn-sm btn-secondary" download>
+              ⬇️ Download Original
+            </a>
+            <button class="modal-close-btn">&times;</button>
+          </div>
+        </div>
+
+        <div id="docViewerContent" style="background: rgba(0,0,0,0.4); border-radius: var(--radius-lg); overflow: hidden;"></div>
+      </div>
+    </div>
+
+    <!-- Profile Settings Modal -->
+    <div class="modal-overlay" id="profileSettingsModal">
+      <div class="modal-box">
+        <div class="modal-header">
+          <h2>Profile & Privacy Settings</h2>
+          <button class="modal-close-btn">&times;</button>
+        </div>
+
+        <form id="profileSettingsForm">
+          <div class="form-grid-2">
+            <div class="form-group">
+              <label class="form-label" for="editFullName">Full Name</label>
+              <input type="text" class="form-input" id="editFullName" required />
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="editHeadline">Professional Headline</label>
+              <input type="text" class="form-input" id="editHeadline" placeholder="Senior AI Research Engineer" />
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="editBio">Bio & Summary</label>
+            <textarea class="form-textarea" id="editBio" rows="3" placeholder="Brief summary of your professional journey and passion..."></textarea>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="editAvatarUrl">Avatar Image URL</label>
+            <input type="url" class="form-input" id="editAvatarUrl" placeholder="https://..." />
+          </div>
+
+          <div class="form-grid-2">
+            <div class="form-group">
+              <label class="form-label" for="editWebsiteUrl">Website URL</label>
+              <input type="url" class="form-input" id="editWebsiteUrl" placeholder="https://mywebsite.com" />
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="editGithubUrl">GitHub URL</label>
+              <input type="url" class="form-input" id="editGithubUrl" placeholder="https://github.com/username" />
+            </div>
+          </div>
+
+          <div class="form-grid-2">
+            <div class="form-group">
+              <label class="form-label" for="editLinkedinUrl">LinkedIn URL</label>
+              <input type="url" class="form-input" id="editLinkedinUrl" placeholder="https://linkedin.com/in/username" />
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="editTwitterUrl">Twitter / X URL</label>
+              <input type="url" class="form-input" id="editTwitterUrl" placeholder="https://x.com/username" />
+            </div>
+          </div>
+
+          <div class="form-group" style="background: rgba(99, 102, 241, 0.08); border: 1px solid rgba(99, 102, 241, 0.2); padding: 1rem; border-radius: var(--radius-md);">
+            <label style="display: flex; align-items: center; gap: 0.75rem; cursor: pointer;">
+              <input type="checkbox" id="editPublicProfileToggle" style="width: 18px; height: 18px;" />
+              <div>
+                <div style="font-weight: 700; font-size: 0.9rem;">Allow Public Portfolio Page (/u/your_username)</div>
+                <div style="font-size: 0.8rem; color: var(--text-muted);">When unchecked, only you can view your profile and credentials.</div>
+              </div>
+            </label>
+          </div>
+
+          <div style="display: flex; justify-content: flex-end; gap: 0.75rem; margin-top: 1.5rem;">
+            <button type="button" class="btn btn-secondary" onclick="window.app.closeModal('profileSettingsModal')">Cancel</button>
+            <button type="submit" class="btn btn-primary">Save Changes</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- Share Portfolio Modal -->
+    <div class="modal-overlay" id="sharePortfolioModal">
+      <div class="modal-box" style="max-width: 480px; text-align: center;">
+        <div class="modal-header">
+          <h2>Share Your Public Portfolio</h2>
+          <button class="modal-close-btn">&times;</button>
+        </div>
+
+        <div style="padding: 1rem 0;">
+          <div style="padding: 12px; background: #ffffff; border-radius: var(--radius-lg); display: inline-block; margin-bottom: 1.25rem;">
+            <img id="sharePortfolioQrCode" src="" alt="Share QR Code" style="display: block; width: 160px; height: 160px;" />
+          </div>
+
+          <p style="color: var(--text-secondary); font-size: 0.875rem; margin-bottom: 1.25rem;">
+            Scan with a smartphone camera or copy the direct link below to share your public achievements with recruiters, colleagues, and clients.
+          </p>
+
+          <div style="display: flex; gap: 0.5rem; margin-bottom: 1rem;">
+            <input type="text" class="form-input" id="sharePortfolioUrlInput" readonly style="font-size: 0.85rem;" />
+            <button class="btn btn-primary" id="copyShareLinkBtn">Copy</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Dev Mailbox & Email Sandbox Modal -->
+    <div class="modal-overlay" id="mailboxModal">
+      <div class="modal-box" style="max-width: 580px;">
+        <div class="modal-header">
+          <h2>📬 Dev Sandbox Mailbox</h2>
+          <button class="modal-close-btn">&times;</button>
+        </div>
+        <p style="color: var(--text-secondary); font-size: 0.85rem; margin-bottom: 1rem;">
+          Simulated outbound emails. In development mode, verification emails are stored here for 1-click verification testing.
+        </p>
+        <div id="mailboxListContainer" style="max-height: 400px; overflow-y: auto;"></div>
+      </div>
+    </div>
+
+    <!-- Toast Notifications -->
+    <div class="toast-container" id="toastContainer"></div>
+
+  </div>
+
+  <!-- JavaScript Scripts -->
+  <script src="/js/api.js"></script>
+  <script src="/js/auth.js"></script>
+  <script src="/js/achievements.js"></script>
+  <script src="/js/profile.js"></script>
+  <script src="/js/app.js"></script>
+</body>
+</html>
